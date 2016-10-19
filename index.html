@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<head>
+<script type='text/javascript' src='assets/jquery.min.js'></script>
+</head>
+
+<body>
+<a href='index_style.html'> With style ;)</a></br>
+<button id='getall'>Get all users</button>
+<div id='container'></div>
+
+<input type='text' id='mail'></input>
+<button id='search'>Search</button>
+<div id='result'></div>
+
+<script type='text/javascript'>
+  $('#getall').click(function(){
+    $.ajax({ 
+      type: 'GET',
+      url: 'http://127.0.0.1:8081/user/',
+      success: function (data) {
+        var ret = jQuery.parseJSON(data);
+        $.each(ret, function(index) {
+          $('#container').append(ret[index].email + '</br>');
+        });
+      },
+      error: function (xhr, status, error) {
+        console.log('Error: ' + error.message);
+      }
+    });
+  });
+  $('#search').click(function() {
+    $.ajax({
+      type: 'GET',
+      url: 'http://127.0.0.1:8081/user/search/' + $('#mail').val(),
+      success: function (data) {
+        try {
+          var ret = jQuery.parseJSON(JSON.stringify(data));
+          $('#result').append(ret[0].nome + '</br>');
+        } catch(err) {
+          alert('Errore nella ricerca: ' + ret.message);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.log('Error: ' + error.message);
+      }
+    });
+  });
+</script>
+
+</body>
